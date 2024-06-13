@@ -1,5 +1,15 @@
 # Local Imports
 import whisper as wh
+import tkinter as tk
+from tkinter import filedialog
+from tkinter.filedialog import askopenfilename
+
+# Allow user to select audio file from directory with file dialog
+root = tk.Tk()
+root.withdraw()
+file_path = filedialog.askopenfilename()
+
+
 
 # Ask user for ID of patient
 patient_id = input('Enter the ID of the patient: ')
@@ -9,7 +19,8 @@ audio_model = wh.load_model('tiny')
 
 # Load the audio file
 #audio = wh.load_audio('test_audio.mp3')
-result1 = audio_model.transcribe('test_audio.mp3')
+result1 = audio_model.transcribe(file_path)
+
 
 
 # TODO: Implement the following code for detecting language and decoding audio
