@@ -17,22 +17,31 @@ patient_id = input('Enter the ID of the patient: ')
 # Load the model
 audio_model = wh.load_model('tiny')
 
+
 # Load the audio file
-#audio = wh.load_audio('test_audio.mp3')
+audio = wh.load_audio(file_path)
 
-# Transcribe the audio 
-# Using fp32 since my Mac doesn't have a gpu
-result1 = audio_model.transcribe(file_path, fp16=False)
-
-
-
-# TODO: Implement the following code for detecting language and decoding audio
 # Convert the audio to a mel spectrogram
 #mel = wh.log_mel_spectrogram(audio).to(audio_model.device)
 
 # Detect the spoken language
 #_, probs = audio_model.detect_language(mel)
-#print(f"Detected language: {max(probs, key=probs.get)}")
+#detected_language = max(probs, key=probs.get)
+#print(f"Detected language: {detected_language}")
+
+# Transcribe the audio 
+# Using fp32 since my Mac doesn't have a gpu
+result1 = audio_model.transcribe(file_path, fp16=False)
+
+# Extract language from the transcription
+detected_language = result1['language']
+
+
+# TODO: Seperate speaker from text object
+
+
+# TODO: Implement the following code for detecting language and decoding audio
+
 
 # Decode the audio
 #options = wh.DecodingOptions()
@@ -41,7 +50,13 @@ result1 = audio_model.transcribe(file_path, fp16=False)
 
 
 # Write result1['text']  to a txt file naming it the patient_id
-with open('MI#' + patient_id + '.txt', 'w') as f:
+with open('MI#' + patient_id + detected_language +'.txt', 'w') as f:
     f.write(result1['text'])
+
+
+## TODO: Implement a system to upload the txt file to a server so it never gets stored locally
+
+
+
 
 print ('Completed')
