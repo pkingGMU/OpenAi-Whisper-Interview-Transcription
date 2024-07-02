@@ -38,6 +38,7 @@ detected_language = result1['language']
 
 
 # TODO: Seperate speaker from text object
+print(result1)
 
 
 # TODO: Implement the following code for detecting language and decoding audio
@@ -50,8 +51,8 @@ detected_language = result1['language']
 
 
 # Write result1['text']  to a txt file naming it the patient_id
-with open('MI#' + patient_id + detected_language +'.txt', 'w') as f:
-    f.write(result1['text'])
+#with open('MI#' + patient_id + detected_language +'.txt', 'w') as f:
+#    f.write(result1['text'])
 
 
 ## TODO: Implement a system to upload the txt file to a server so it never gets stored locally

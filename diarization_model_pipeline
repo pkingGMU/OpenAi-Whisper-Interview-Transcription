@@ -1,0 +1,60 @@
+# https://github.com/pyannote/pyannote-audio/blob/develop/tutorials/applying_a_pipeline.ipynb
+
+from pathlib import Path
+import os
+from pyannote.audio import Pipeline
+import torch
+
+def load_pipeline_from_pretrained(path_to_config: str) -> Pipeline:
+
+    # relative path to config file using os
+    repo_root = os.path.abspath(os.path.dirname(__file__))
+
+    relative_path_to_config = os.path.join(repo_root, r'models\pyannote_diarization_config.yaml')
+
+    path_to_config = Path(path_to_config)
+
+    print(f"Loading pyannote pipeline from {path_to_config}...")
+    # the paths in the config are relative to the current working directory
+    # so we need to change the working directory to the model path
+    # and then change it back
+
+    cwd = Path.cwd().resolve()  # store current working directory
+
+    # first .parent is the folder of the config, second .parent is the folder containing the 'models' folder
+    cd_to = path_to_config.parent.parent.resolve()
+
+    print(f"Changing working directory to {cd_to}")
+    os.chdir(cd_to)
+
+    pipeline = Pipeline.from_pretrained(path_to_config)
+    
+
+
+    print(f"Changing working directory back to {cwd}")
+    os.chdir(cwd)
+
+    return pipeline
+
+PATH_TO_CONFIG = r"/Users/patrick/Git Hub/Deep-Speech-Mac-Test/models/pyannote_diarization_config.yaml"
+
+pipeline = Pipeline.from_pretrained(PATH_TO_CONFIG)
+
+print (pipeline.classes)
+
+# apply pretrained pipeline
+diarization = pipeline("test_audio.wav", num_speakers=2)
+
+
+# dump the diarization output to disk using RTTM format
+with open("audio.rttm", "w") as rttm:
+    diarization.write_rttm(rttm)
+
+
+# print the result
+for turn, _, speaker in diarization.itertracks(yield_label=True):
+    print(f"start={turn.start:.1f}s stop={turn.end:.1f}s speaker_{speaker}")
+# start=0.2s stop=1.5s speaker_0
+# start=1.8s stop=3.9s speaker_1
+# start=4.2s stop=5.7s speaker_0
+# ...
