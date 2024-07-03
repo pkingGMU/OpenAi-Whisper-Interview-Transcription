@@ -1,6 +1,7 @@
 from pyannote.audio import Pipeline
+
 pipeline = Pipeline.from_pretrained("config.yaml")
-diarization = pipeline("test_audio.wav")
+diarization = pipeline("test_audio.wav",num_speakers=2)
 
 
 for turn, _, speaker in diarization.itertracks(yield_label=True):
