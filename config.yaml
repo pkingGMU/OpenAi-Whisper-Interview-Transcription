@@ -1,11 +1,19 @@
-pytorch_model:
-  bin:
+version: 3.0.0
+
 pipeline:
-  name: pyannote.audio.pipelines.VoiceActivityDetection
+  name: pyannote.audio.pipelines.SpeakerDiarization
   params:
+    clustering: AgglomerativeClustering
+    embedding: hbredin/wespeaker-voxceleb-resnet34-LM
+    embedding_batch_size: 1
+    embedding_exclude_overlap: true
     segmentation: pytorch_model.bin
+    segmentation_batch_size: 32
 
 params:
-  min_duration_off: 0.09791355693027545
-  min_duration_on: 0.05537587440407595
-
+  clustering:
+    method: centroid
+    min_cluster_size: 12
+    threshold: 0.7045654963945799
+  segmentation:
+    min_duration_off: 0.0
