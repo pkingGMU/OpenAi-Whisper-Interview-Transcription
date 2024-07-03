@@ -1,5 +1,6 @@
 # Imports
 from pyannote.audio import Pipeline
+import onnxruntime
 
 
 # Load the diarization model
