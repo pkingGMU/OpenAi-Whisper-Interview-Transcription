@@ -1,22 +1,7 @@
-# Using pyannote.audio for diarization
-# This will give timestamps that will be used to transcribe with audio.py
+from pyannote.audio import Pipeline
+pipeline = Pipeline.from_pretrained("config.yaml")
+diarization = pipeline("test_audio.wav")
 
-# Imports
-from pyannote.core import Annotation
 
-# Load RTTM file into a pyannote Annotation object
-annotation = Annotation.extrude("audio.rttm")
-
-# Visualize speaker turns
-annotation.plot()
-
-# Evaluate diarization performance against ground truth (if available)
-# Assuming reference_rttm is the ground truth RTTM file
-reference_annotation = Annotation.from_rttm("reference.rttm")
-der = annotation.diarization_error_rate(reference_annotation)
-print(f"DER: {der}")
-
-# Access segments programmatically
-for segment in annotation.itersegments():
-    start, end, speaker = segment.start, segment.end, segment.track.label
-    print(f"Speaker {speaker}: start={start:.2f}s, end={end:.2f}s")
+for turn, _, speaker in diarization.itertracks(yield_label=True):
+    print(f"start={turn.start:.1f}s stop={turn.end:.1f}s speaker_{speaker}")

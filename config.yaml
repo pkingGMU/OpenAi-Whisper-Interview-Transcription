@@ -1,0 +1,11 @@
+pytorch_model:
+  bin:
+pipeline:
+  name: pyannote.audio.pipelines.VoiceActivityDetection
+  params:
+    segmentation: pytorch_model.bin
+
+params:
+  min_duration_off: 0.09791355693027545
+  min_duration_on: 0.05537587440407595
+
