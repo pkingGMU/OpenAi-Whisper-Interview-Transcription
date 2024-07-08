@@ -21,7 +21,7 @@ for folder in os.listdir(root):
         file_path = os.path.join(root, folder)
         break
     else:
-        file_path = 'Didnt find the file'
+        file_path = 'Didnt find the folder'
 
 for file in os.listdir(file_path):
     print(file)
