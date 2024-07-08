@@ -8,24 +8,31 @@ import os
 ## TODO: Some easy way to select files without using a file explorer
 # Have user input the file name and get the path from the input
 # Ask user for patient ID
-patient_id = input('Enter the name of the patient: ') + '.wav'
+patient_id = input('Enter the name of the patient: ')
 
 # Get the path of the file by searching a specific directory
 ## TODO: Change root folder to cyberduck
 root = r"/Users/patrick/Git Hub/Deep-Speech-Mac-Test/"
 
-for file in os.listdir(root):
-    
+for folder in os.listdir(root):
+    print(folder)
 
-    print(file)
-
-    if file == patient_id:
-        file_path = os.path.join(root, file)
+    if folder == patient_id:
+        file_path = os.path.join(root, folder)
         break
     else:
         file_path = 'Didnt find the file'
 
-print (file_path)
+for file in os.listdir(file_path):
+    print(file)
+
+    if file.endswith('.wav'):
+        audio_file = os.path.join(file_path, file)
+        break
+    else:
+        audio_file = 'Didnt find the file'
+
+print (audio_file)
 
 
 ## TODO: Run diarization.py as a function
