@@ -37,12 +37,15 @@ for file in os.listdir(file_path):
 print (audio_file)
 
 ## Convert mp3 file to wav using audio_file path if there is no wav file created
+temp_file_name = file.split('.')[0]
+wav_file_path = os.path.join(file_path, temp_file_name+'.wav')
+
 if not any(file.endswith('.wav') for file in os.listdir(file_path)):    
     sound = AudioSegment.from_mp3(audio_file)
-    temp_file_name = file.split('.')[0]
-    temp_file_path = os.path.join(file_path, temp_file_name+'.wav')
-    sound.export(temp_file_path, format="wav")
+    sound.export(wav_file_path, format="wav")
 
+
+print(wav_file_path)
 
 
 ## TODO: Run diarization.py as a function
