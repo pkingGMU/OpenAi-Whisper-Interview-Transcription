@@ -1,6 +1,3 @@
-
-
-
 ## Run diarization.py and then run audio.py and match the output timings of both to create a new with the speaker labels with the transcription output line by line
 
 # Imports
@@ -31,7 +28,7 @@ for folder in os.listdir(root):
 for file in os.listdir(file_path):
     print(file)
 
-    if file.endswith('.wav'):
+    if file.endswith('.mp3'):
         audio_file = os.path.join(file_path, file)
         break
     else:
