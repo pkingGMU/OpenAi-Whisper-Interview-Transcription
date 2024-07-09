@@ -4,7 +4,7 @@
 import os
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
-import pickle as pk
+#import pickle as pk
 
 
 ## TODO: Some easy way to select files without using a file explorer
@@ -14,7 +14,7 @@ patient_id = input('Enter the name of the patient: ')
 
 # Get the path of the file by searching a specific directory
 ## TODO: Change root folder to cyberduck
-root = r"/Users/patrick/Git Hub/Deep-Speech-Mac-Test/"
+root = r"C:\Users\patk1\OneDrive\Desktop\Git Hub\OpenAi-Whisper-Interview-Transcription"
 
 for folder in os.listdir(root):
     print(folder)
@@ -35,6 +35,14 @@ for file in os.listdir(file_path):
         audio_file = 'Didnt find the file'
 
 print (audio_file)
+
+## Convert mp3 file to wav using audio_file path if there is no wav file created
+if not any(file.endswith('.wav') for file in os.listdir(file_path)):    
+    sound = AudioSegment.from_mp3(audio_file)
+    temp_file_name = file.split('.')[0]
+    temp_file_path = os.path.join(file_path, temp_file_name+'.wav')
+    sound.export(temp_file_path, format="wav")
+
 
 
 ## TODO: Run diarization.py as a function
