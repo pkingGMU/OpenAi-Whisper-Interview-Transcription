@@ -4,27 +4,16 @@
 import os
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
-#import pickle as pk
+import pickle as pk
+import git
+
+# Local Imports
+from transcribe import *
+from diarization import *
 
 
 
-## Convert mp3 file to wav using audio_file path if there is no wav file created
-if not any(file.endswith('.wav') for file in os.listdir(file_path)):    
-    sound = AudioSegment.from_mp3(audio_file)
-    temp_file_name = file.split('.')[0]
-    temp_file_path = os.path.join(file_path, temp_file_name+'.wav')
-    sound.export(temp_file_path, format="wav")
 
-
-
-## TODO: Run diarization.py as a function
-
-
-## TODO: Run audio.py as a function
-
-## TODO: Match the output of both functions line by line
-
-# Load the diarization model
 
 def get_diarization(audio_file):
 
@@ -45,12 +34,15 @@ def get_diarization(audio_file):
 
     audio = AudioSegment.from_wav("audio.wav")
     snips = []
-
+    audio_snips = []
     for turn, _, speaker in diarization.itertracks(yield_label=True):
         snip = (turn.start,turn.end,speaker)
         snips.append(snip)
 
-    return snips
+        #pydub works in miliseconds
+        audio_snips = audio[(snip[0]*1000):(snip[1]*1000)]
+
+    return audio_snips
 
 def get_consolidated_audio_snips(snips):
     new_snips = []
@@ -94,9 +86,13 @@ def combine_diar_transcript(diarization_data, transcription_data):
         for transcript_segment in transcription_data:
             if transcript_segment["end_time"] >= start_time and transcript_segment["start_time"] <= end_time:
                 matched_text += transcript_segment["text"] + " "
+                transcription_data.remove(transcript_segment)
+                
 
         # Append speaker and matched text to aligned output
         aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
+        
+        print (transcription_data)
 
     return aligned_text
 
@@ -136,25 +132,36 @@ def main():
     temp_file_name = file.split('.')[0]
     wav_file_path = os.path.join(file_path, temp_file_name+'.wav')
 
-    if not any(file.endswith('.wav') for file in os.listdir(file_path)):
+    if not any(file.endswith('.wav') for file in os.listdir(file_path)):    
         sound = AudioSegment.from_mp3(audio_file)
         sound.export(wav_file_path, format="wav")
 
 
     print(wav_file_path)
+    
+    ## Transcription
+    transcription_data = transcribe_audio(wav_file_path)
+    #print  (transcription_data)
+
+    ## Diarization
+    diarization_data = diarization_task(wav_file_path)
+    print (diarization_data)
+
+    # TODO: Run the diarization model on the wav file to get this data
+
 
     # Test combination
-    transcription_data = [
-    {"text": "Hello, how are you?", "start_time": 0.0, "end_time": 1.5},
-    {"text": "I'm good, thank you.", "start_time": 2.0, "end_time": 4.0},
-    {"text": "Nice weather today.", "start_time": 5.0, "end_time": 6.5},
-    ]
+    #transcription_data = [
+    #{"text": "Hello, how are you?", "start_time": 0.0, "end_time": 1.5, 'index': 0},
+    #{"text": "I'm good, thank you.", "start_time": 2.0, "end_time": 4.0, 'index': 1},
+    #{"text": "Nice weather today.", "start_time": 5.0, "end_time": 6.5},
+    #]
 
-    diarization_data = [
-    {"speaker": "A", "start_time": 0.0, "end_time": 1.0},
-    {"speaker": "B", "start_time": 2.0, "end_time": 3.5},
-    {"speaker": "A", "start_time": 5.0, "end_time": 6.0},
-    ]
+    #diarization_data = [
+    #{"speaker": "A", "start_time": 0.0, "end_time": 1.0},
+    #{"speaker": "B", "start_time": 2.0, "end_time": 3.5},
+    #{"speaker": "A", "start_time": 5.0, "end_time": 6.0},
+    #]
 
     # Example usage
     aligned_segments = combine_diar_transcript(diarization_data, transcription_data)
