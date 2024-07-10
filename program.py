@@ -36,6 +36,7 @@ for file in os.listdir(file_path):
 
 print (audio_file)
 
+temp_file_path = ""
 ## Convert mp3 file to wav using audio_file path if there is no wav file created
 if not any(file.endswith('.wav') for file in os.listdir(file_path)):    
     sound = AudioSegment.from_mp3(audio_file)

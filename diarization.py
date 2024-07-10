@@ -6,7 +6,7 @@ import onnxruntime
 # Load the diarization model
 pipeline = Pipeline.from_pretrained("config.yaml")
 # Load the audio file and run the pipeline
-diarization = pipeline("test_audio.wav")
+diarization = pipeline("audio.wav")
 
 print (f'{diarization}')
 
