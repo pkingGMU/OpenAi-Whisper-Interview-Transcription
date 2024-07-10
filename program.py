@@ -4,9 +4,12 @@
 import os
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
-#import pickle as pk
+import pickle as pk
 import git
 
+# Local Imports
+from transcribe import *
+from diarization import *
 
 
 
@@ -83,9 +86,13 @@ def combine_diar_transcript(diarization_data, transcription_data):
         for transcript_segment in transcription_data:
             if transcript_segment["end_time"] >= start_time and transcript_segment["start_time"] <= end_time:
                 matched_text += transcript_segment["text"] + " "
+                transcription_data.remove(transcript_segment)
+                
 
         # Append speaker and matched text to aligned output
         aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
+        
+        print (transcription_data)
 
     return aligned_text
 
@@ -131,19 +138,30 @@ def main():
 
 
     print(wav_file_path)
+    
+    ## Transcription
+    transcription_data = transcribe_audio(wav_file_path)
+    #print  (transcription_data)
+
+    ## Diarization
+    diarization_data = diarization_task(wav_file_path)
+    print (diarization_data)
+
+    # TODO: Run the diarization model on the wav file to get this data
+
 
     # Test combination
-    transcription_data = [
-    {"text": "Hello, how are you?", "start_time": 0.0, "end_time": 1.5},
-    {"text": "I'm good, thank you.", "start_time": 2.0, "end_time": 4.0},
-    {"text": "Nice weather today.", "start_time": 5.0, "end_time": 6.5},
-    ]
+    #transcription_data = [
+    #{"text": "Hello, how are you?", "start_time": 0.0, "end_time": 1.5, 'index': 0},
+    #{"text": "I'm good, thank you.", "start_time": 2.0, "end_time": 4.0, 'index': 1},
+    #{"text": "Nice weather today.", "start_time": 5.0, "end_time": 6.5},
+    #]
 
-    diarization_data = [
-    {"speaker": "A", "start_time": 0.0, "end_time": 1.0},
-    {"speaker": "B", "start_time": 2.0, "end_time": 3.5},
-    {"speaker": "A", "start_time": 5.0, "end_time": 6.0},
-    ]
+    #diarization_data = [
+    #{"speaker": "A", "start_time": 0.0, "end_time": 1.0},
+    #{"speaker": "B", "start_time": 2.0, "end_time": 3.5},
+    #{"speaker": "A", "start_time": 5.0, "end_time": 6.0},
+    #]
 
     # Example usage
     aligned_segments = combine_diar_transcript(diarization_data, transcription_data)
