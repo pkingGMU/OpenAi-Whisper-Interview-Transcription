@@ -5,57 +5,12 @@ import os
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
 #import pickle as pk
+import git
 
 
-## TODO: Some easy way to select files without using a file explorer
-# Have user input the file name and get the path from the input
-# Ask user for patient ID
-patient_id = input('Enter the name of the patient: ')
-
-# Get the path of the file by searching a specific directory
-## TODO: Change root folder to cyberduck
-root = r"C:\Users\patk1\OneDrive\Desktop\Git Hub\OpenAi-Whisper-Interview-Transcription"
-
-for folder in os.listdir(root):
-    print(folder)
-
-    if folder == patient_id:
-        file_path = os.path.join(root, folder)
-        break
-    else:
-        file_path = 'Didnt find the folder'
-
-for file in os.listdir(file_path):
-    print(file)
-
-    if file.endswith('.mp3'):
-        audio_file = os.path.join(file_path, file)
-        break
-    else:
-        audio_file = 'Didnt find the file'
-
-print (audio_file)
-
-## Convert mp3 file to wav using audio_file path if there is no wav file created
-temp_file_name = file.split('.')[0]
-wav_file_path = os.path.join(file_path, temp_file_name+'.wav')
-
-if not any(file.endswith('.wav') for file in os.listdir(file_path)):    
-    sound = AudioSegment.from_mp3(audio_file)
-    sound.export(wav_file_path, format="wav")
 
 
-print(wav_file_path)
 
-
-## TODO: Run diarization.py as a function
-
-
-## TODO: Run audio.py as a function
-
-## TODO: Match the output of both functions line by line
-
-# Load the diarization model
 
 def get_diarization(audio_file):
 
@@ -116,4 +71,57 @@ def get_consolidated_audio_snips(snips):
 
 
 
+def main():
 
+    ## TODO: Some easy way to select files without using a file explorer
+    # Have user input the file name and get the path from the input
+    # Ask user for patient ID
+    patient_id = input('Enter the name of the patient: ')
+
+    # Get the path of the file by searching a specific directory
+    ## TODO: Change root folder to cyberduck
+    root = os.path.dirname(os.path.abspath(__file__))
+
+
+    for folder in os.listdir(root):
+        print(folder)
+
+        if folder == patient_id:
+            file_path = os.path.join(root, folder)
+            break
+        else:
+            file_path = 'Didnt find the folder'
+
+    for file in os.listdir(file_path):
+        print(file)
+
+        if file.endswith('.mp3'):
+            audio_file = os.path.join(file_path, file)
+            break
+        else:
+            audio_file = 'Didnt find the file'
+
+    print (audio_file)
+
+    ## Convert mp3 file to wav using audio_file path if there is no wav file created
+    temp_file_name = file.split('.')[0]
+    wav_file_path = os.path.join(file_path, temp_file_name+'.wav')
+
+    if not any(file.endswith('.wav') for file in os.listdir(file_path)):    
+        sound = AudioSegment.from_mp3(audio_file)
+        sound.export(wav_file_path, format="wav")
+
+
+    print(wav_file_path)
+
+## TODO: Run diarization.py as a function
+
+
+## TODO: Run audio.py as a function
+
+## TODO: Match the output of both functions line by line
+
+# Load the diarization model
+
+if __name__ == '__main__':
+    main()
