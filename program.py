@@ -5,7 +5,6 @@ import os
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
 import pickle as pk
-import git
 
 # Local Imports
 from transcribe import *
@@ -84,7 +83,7 @@ def combine_diar_transcript(diarization_data, transcription_data):
         # Find corresponding text segment from transcription
         matched_text = ""
         for transcript_segment in transcription_data:
-            if transcript_segment["end_time"] >= start_time and transcript_segment["start_time"] <= end_time:
+            if transcript_segment["end_time"] >= start_time - .1 and transcript_segment["start_time"] <= end_time +.1:
                 matched_text += transcript_segment["text"] + " "
                 transcription_data.remove(transcript_segment)
                 
@@ -95,6 +94,27 @@ def combine_diar_transcript(diarization_data, transcription_data):
         print (transcription_data)
 
     return aligned_text
+
+def combine_diar_transcript2(diarization_data, transcription_data):
+    aligned_text = []
+
+    for transcript_segment in transcription_data:
+        start_time = transcript_segment["start_time"]
+        end_time = transcript_segment["end_time"]
+
+
+        # Find corresponding diarization
+        for diarization_segment in diarization_data:
+            matched_text = ""
+            if start_time >= diarization_segment["start_time"] - .1 and end_time <= diarization_segment["start_time"] + .1:
+                matched_text += transcript_segment["text"] + " "
+
+                # Append speaker and matched text to aligned output
+                speaker = diarization_segment["speaker"]
+                aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
+    return aligned_text
+
+
 
 def main():
 
@@ -140,12 +160,19 @@ def main():
     print(wav_file_path)
     
     ## Transcription
-    transcription_data = transcribe_audio(wav_file_path)
+
+    #transcription_data = transcribe_audio(wav_file_path)
+    with open("transcription_data.pkl","wb") as f:
+        pk.dump(transcribe_audio(wav_file_path),f)
+
     #print  (transcription_data)
 
     ## Diarization
-    diarization_data = diarization_task(wav_file_path)
-    print (diarization_data)
+
+    #diarization_data = diarization_task(wav_file_path)
+    with open("diarization_data.pkl", "wb") as f:
+        pk.dump(diarization_task(wav_file_path), f)
+    #print(diarization_data)
 
     # TODO: Run the diarization model on the wav file to get this data
 
@@ -164,8 +191,8 @@ def main():
     #]
 
     # Example usage
-    aligned_segments = combine_diar_transcript(diarization_data, transcription_data)
-    print (aligned_segments)
+    aligned_segments = combine_diar_transcript2(diarization_data, transcription_data)
+    #print(aligned_segments)
 
     # Output to TXT file
     output_filename = "aligned_output.txt"
