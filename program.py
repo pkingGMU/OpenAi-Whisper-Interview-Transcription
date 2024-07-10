@@ -45,15 +45,12 @@ def get_diarization(audio_file):
 
     audio = AudioSegment.from_wav("audio.wav")
     snips = []
-    audio_snips = []
+
     for turn, _, speaker in diarization.itertracks(yield_label=True):
         snip = (turn.start,turn.end,speaker)
         snips.append(snip)
 
-        #pydub works in miliseconds
-        audio_snips = audio[(snip[0]*1000):(snip[1]*1000)]
-
-    return audio_snips
+    return snips
 
 def get_consolidated_audio_snips(snips):
     new_snips = []
