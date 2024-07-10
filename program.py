@@ -112,6 +112,8 @@ def combine_diar_transcript2(diarization_data, transcription_data):
                 # Append speaker and matched text to aligned output
                 speaker = diarization_segment["speaker"]
                 aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
+
+                #end inner loop once matching diarization is found
                 break
 
 
