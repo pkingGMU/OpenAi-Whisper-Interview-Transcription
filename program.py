@@ -69,7 +69,25 @@ def get_consolidated_audio_snips(snips):
 
     return new_snips
 
+def combine_diar_transcript(diarization_data, transcription_data):
+    aligned_text = []
 
+    # Iterate over diarization segments
+    for diarization_segment in diarization_data:
+        speaker = diarization_segment["speaker"]
+        start_time = diarization_segment["start_time"]
+        end_time = diarization_segment["end_time"]
+
+        # Find corresponding text segment from transcription
+        matched_text = ""
+        for transcript_segment in transcription_data:
+            if transcript_segment["end_time"] >= start_time and transcript_segment["start_time"] <= end_time:
+                matched_text += transcript_segment["text"] + " "
+
+        # Append speaker and matched text to aligned output
+        aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
+
+    return aligned_text
 
 def main():
 
@@ -113,6 +131,31 @@ def main():
 
 
     print(wav_file_path)
+
+    # Test combination
+    transcription_data = [
+    {"text": "Hello, how are you?", "start_time": 0.0, "end_time": 1.5},
+    {"text": "I'm good, thank you.", "start_time": 2.0, "end_time": 4.0},
+    {"text": "Nice weather today.", "start_time": 5.0, "end_time": 6.5},
+    ]
+
+    diarization_data = [
+    {"speaker": "A", "start_time": 0.0, "end_time": 1.0},
+    {"speaker": "B", "start_time": 2.0, "end_time": 3.5},
+    {"speaker": "A", "start_time": 5.0, "end_time": 6.0},
+    ]
+
+    # Example usage
+    aligned_segments = combine_diar_transcript(diarization_data, transcription_data)
+    print (aligned_segments)
+
+    # Output to TXT file
+    output_filename = "aligned_output.txt"
+    with open(output_filename, "w") as f:
+        for segment in aligned_segments:
+            f.write(segment + "\n")
+
+
 
 ## TODO: Run diarization.py as a function
 

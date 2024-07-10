@@ -1,0 +1,3 @@
+Speaker A: Hello, how are you?
+Speaker B: I'm good, thank you.
+Speaker A: Nice weather today.
