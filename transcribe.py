@@ -9,7 +9,7 @@ def transcribe_audio(audio):
     
 
     # Load the model
-    audio_model = wh.load_model('large')
+    audio_model = wh.load_model('tiny')
 
 
     # Load the audio file
