@@ -106,14 +106,16 @@ def combine_diar_transcript2(diarization_data, transcription_data):
         # Find corresponding diarization
         for diarization_segment in diarization_data:
             matched_text = ""
-            if start_time >= diarization_segment["start_time"] - .1 and end_time <= diarization_segment["start_time"] + .1:
+            if end_time >= diarization_segment["start_time"] - .1 and start_time <= diarization_segment["end_time"] + .1:
                 matched_text += transcript_segment["text"] + " "
 
                 # Append speaker and matched text to aligned output
                 speaker = diarization_segment["speaker"]
                 aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
-    return aligned_text
+                break
 
+
+    return aligned_text
 
 
 def main():
@@ -160,19 +162,21 @@ def main():
     print(wav_file_path)
     
     ## Transcription
-
     #transcription_data = transcribe_audio(wav_file_path)
-    with open("transcription_data.pkl","wb") as f:
-        pk.dump(transcribe_audio(wav_file_path),f)
 
-    #print  (transcription_data)
+    with open("transcription_data.pkl","rb") as f:
+        transcription_data = pk.load(f)
+
+
+    #print (transcription_data)
 
     ## Diarization
-
     #diarization_data = diarization_task(wav_file_path)
-    with open("diarization_data.pkl", "wb") as f:
-        pk.dump(diarization_task(wav_file_path), f)
-    #print(diarization_data)
+
+    with open("diarization_data.pkl","rb") as f:
+        diarization_data = pk.load(f)
+
+
 
     # TODO: Run the diarization model on the wav file to get this data
 
