@@ -160,16 +160,16 @@ def main():
     print(wav_file_path)
     
     ## Transcription
-    #transcription_data = transcribe_audio(wav_file_path)
 
+    #transcription_data = transcribe_audio(wav_file_path)
     with open("transcription_data.pkl","wb") as f:
         pk.dump(transcribe_audio(wav_file_path),f)
 
     #print  (transcription_data)
 
     ## Diarization
-    #diarization_data = diarization_task(wav_file_path)
 
+    #diarization_data = diarization_task(wav_file_path)
     with open("diarization_data.pkl", "wb") as f:
         pk.dump(diarization_task(wav_file_path), f)
     #print(diarization_data)
