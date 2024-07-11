@@ -108,7 +108,7 @@ def combine_diar_transcript2(diarization_data, transcription_data):
             matched_text = ""
             if end_time >= diarization_segment["start_time"] - .1 and start_time <= diarization_segment["end_time"] + .1:
                 matched_text += transcript_segment["text"] + " "
-
+                
                 # Append speaker and matched text to aligned output
                 speaker = diarization_segment["speaker"]
                 aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
@@ -164,20 +164,23 @@ def main():
     print(wav_file_path)
     
     ## Transcription
+
     #transcription_data = transcribe_audio(wav_file_path)
 
+    ### DO NOT DELETE THIS IS WHAT WILL ACTUALLY RUN THE TRANSCRIPTION
+    ########transcription_data = transcribe_audio(wav_file_path)
     with open("transcription_data.pkl","rb") as f:
         transcription_data = pk.load(f)
-
 
     #print (transcription_data)
 
     ## Diarization
-    #diarization_data = diarization_task(wav_file_path)
 
+    ### DO NOT DELETE THIS IS WHAT WILL ACTUALLY RUN THE DIARIZATION
+    #######diarization_data = diarization_task(wav_file_path)
     with open("diarization_data.pkl","rb") as f:
         diarization_data = pk.load(f)
-
+    #print(diarization_data)
 
 
     # TODO: Run the diarization model on the wav file to get this data
@@ -200,11 +203,20 @@ def main():
     aligned_segments = combine_diar_transcript2(diarization_data, transcription_data)
     #print(aligned_segments)
 
-    # Output to TXT file
-    output_filename = "aligned_output.txt"
-    with open(output_filename, "w") as f:
-        for segment in aligned_segments:
-            f.write(segment + "\n")
+
+    # If no output txt file exists in the patients folder (ie. LE_12) create a new text file in that folder for the output
+    # If it exists, append the new output to the file
+    output_folder = file_path
+    output_filename = os.path.join(output_folder, patient_id + ".txt")
+    if not os.path.exists(output_filename):
+        with open(output_filename, "w") as f:
+            for segment in aligned_segments:
+                f.write(segment + "\n")
+    else:
+        with open(output_filename, "a") as f:
+            for segment in aligned_segments:
+                f.write(segment + "\n")
+    
 
 
 
