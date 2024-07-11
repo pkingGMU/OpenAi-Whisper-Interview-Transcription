@@ -111,7 +111,9 @@ def combine_diar_transcript2(diarization_data, transcription_data):
                 
                 # Append speaker and matched text to aligned output
                 speaker = diarization_segment["speaker"]
-                aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
+                d_start_time = round(diarization_segment["start_time"], 0)
+                d_end_time = round(diarization_segment["end_time"], 0)
+                aligned_text.append(f"{speaker} \n({d_start_time},{d_end_time}): {matched_text.strip()}")
                 break
     return aligned_text
 
@@ -200,15 +202,12 @@ def main():
     # If no output txt file exists in the patients folder (ie. LE_12) create a new text file in that folder for the output
     # If it exists, append the new output to the file
     output_folder = file_path
-    output_filename = os.path.join(output_folder, patient_id + ".txt")
-    if not os.path.exists(output_filename):
-        with open(output_filename, "w") as f:
-            for segment in aligned_segments:
-                f.write(segment + "\n")
-    else:
-        with open(output_filename, "a") as f:
-            for segment in aligned_segments:
-                f.write(segment + "\n")
+    output_filename = os.path.join(output_folder, patient_id + "_raw_transcription"+ ".txt")
+    
+    with open(output_filename, "w") as f:
+        for segment in aligned_segments:
+            f.write(segment + "\n")
+    
     
 
 
