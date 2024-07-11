@@ -114,15 +114,10 @@ def combine_diar_transcript2(diarization_data, transcription_data):
                 d_start_time = round(diarization_segment["start_time"], 0)
                 d_end_time = round(diarization_segment["end_time"], 0)
                 aligned_text.append(f"{speaker} \n({d_start_time},{d_end_time}): {matched_text.strip()}")
-                d_start = round(diarization_segment["start_time"],0)
-                d_end = round(diarization_segment["end_time"], 0)
-                aligned_text.append(f"{speaker}: ({d_start},{d_end})\n{matched_text.strip()}")
-
-                #end inner loop once matching diarization is found
                 break
+
+
     return aligned_text
-
-
 
 
 def main():
