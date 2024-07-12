@@ -111,13 +111,45 @@ def combine_diar_transcript2(diarization_data, transcription_data):
 
                 # Append speaker and matched text to aligned output
                 speaker = diarization_segment["speaker"]
+
+                #aligned_text.append((speaker,matched_text.strip()))
                 aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
 
                 #end inner loop once matching diarization is found
                 break
 
-
     return aligned_text
+
+def consolidate_speakers(aligned_text):
+    new_aligned_text = []
+
+    #first speaker
+    current_speaker = aligned_text[0][0]
+    start_index = 0
+
+    new_matched_text = ""
+    for i in range(len(aligned_text)):
+
+        # loop from the starting index till a different speaker than the current is found
+        if aligned_text[i][0] == current_speaker:
+            new_matched_text += aligned_text[i][1] + " "
+
+        if aligned_text[i][0] != current_speaker:
+            """ 
+            once a different speaker than the current is found add a tuple consisting of start time
+            of the snip at the starting index, till the end time of last snip to have the same speaker as start index
+            (before the change), and finally have the speaker who spoke.
+            """
+
+            new_aligned_text.append(f"Speaker {aligned_text[start_index][0]}: {new_matched_text.strip()}")
+
+            # update start index, matched text, and current speaker.
+
+            new_matched_text = aligned_text[i][1] + " "
+            start_index = i
+            current_speaker = aligned_text[i][0]
+
+    return new_aligned_text
 
 
 def main():
