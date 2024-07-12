@@ -10,7 +10,8 @@ import os
 def remove_pii():
     with open("pii_model")
 
+word, word, word., word, word.,
 
-    
+word, word, word, ., word
 
  
