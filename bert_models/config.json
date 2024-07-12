@@ -1,5 +1,5 @@
 {
-  "_name_or_path": "google-bert/bert-base-uncased",
+  "_name_or_path": "bert_models/pytorch_model.bin",
   "architectures": [
     "BertForTokenClassification"
   ],
