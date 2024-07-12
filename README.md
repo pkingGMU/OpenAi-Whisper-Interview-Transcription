@@ -9,7 +9,9 @@ How to use:
 3. Upload the mp3 to said folder.
 4. Run program.py
 5. The output txt document with the transcription will live in the same folder you created for the patient
+6. Once you manually correct the transcription, you can run the Word error rate script to calculate the word error rate.
 
 NOT WORKING:
 Using PII models to De-indentify transcription as part of the pipeline.
+Integrated tools to manually corrert the transcription.
 
