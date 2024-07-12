@@ -25,4 +25,4 @@ def remove_pii(txt_file):
 
     return True
 
-remove_pii("a")
+remove_pii("")
