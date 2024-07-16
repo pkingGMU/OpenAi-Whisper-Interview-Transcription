@@ -47,7 +47,7 @@ def remove_pii(txt_file):
         pattern = r'(?<=\b(' + label + r'))\d+'
         cleaned_text = re.sub(pattern, '', cleaned_text)
 
-        #pattern = r'(?<=\b(' + label + r'))\S*'
+        pattern = r'(?<=\b(' + label + r'))\S+'
         #cleaned_text = re.sub(pattern, '', cleaned_text)
     return cleaned_text
 
