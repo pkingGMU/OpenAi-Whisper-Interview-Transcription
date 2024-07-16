@@ -97,6 +97,7 @@ def combine_diar_transcript(diarization_data, transcription_data):
     return aligned_text
 
 def combine_diar_transcript2(diarization_data, transcription_data):
+    deidentified_aligned_text = []
     aligned_text = []
 
     for transcript_segment in transcription_data:
@@ -114,11 +115,13 @@ def combine_diar_transcript2(diarization_data, transcription_data):
                 speaker = diarization_segment["speaker"]
                 d_start_time = round(diarization_segment["start_time"], 0)
                 d_end_time = round(diarization_segment["end_time"], 0)
+                # Remove PII with PII model
+                deidentified_aligned_text.append(f"{speaker} \n({d_start_time},{d_end_time}): {remove_pii(matched_text.strip())}")
                 aligned_text.append(f"{speaker} \n({d_start_time},{d_end_time}): {matched_text.strip()}")
                 break
 
 
-    return aligned_text
+    return deidentified_aligned_text, aligned_text
 
 
 def main():
@@ -185,7 +188,7 @@ def main():
 
 
     # Get allignment segments from combination
-    aligned_segments = combine_diar_transcript2(diarization_data, transcription_data)
+    deidentified_aligned_text, aligned_segments = combine_diar_transcript2(diarization_data, transcription_data)
     #print(aligned_segments)
 
 
@@ -198,18 +201,9 @@ def main():
         for segment in aligned_segments:
             f.write(segment + "\n")
 
-    
-    # DE_ID
-    # Read the file and replace the text with the DE_ID text and the string through pii.py()
-    with open(output_filename_identifiable, "r") as f:
-        raw_text = f.read()
-    
-    # Remove PII with PII model
-    de_identified_text = remove_pii(raw_text)
-
-    # Write the DE_ID text to a new file
     with open(output_filename_DE_ID, "w") as f:
-        f.write(de_identified_text)
+        for segment in deidentified_aligned_text:
+            f.write(segment + "\n")
 
 
 

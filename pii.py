@@ -8,15 +8,7 @@ import re
 
 
 
-def remove_pii(txt_file):
-
-    # Read the text file
-    #with open(txt_file, 'r') as file:
-    #    text = file.read()
-
-    text = """
-    His sister is Suzy Fulworth, who is 28 years old. He is John Doe, who lives at 1234 Elm Street, Springfield, USA, is a software engineer at TechCorp Inc. His email address is john.doe@example.com, and his phone number is 555-123-4567. John’s date of birth is April 15, 1985, and his social security number is 987-65-4321. In his free time, John enjoys hiking and photography. He frequently shops at SuperMart and often uses his credit card ending in 1234 for purchases.
-    """
+def remove_pii(text):
 
     with open("pii_model.pkl", "rb") as f:
         model = pk.load(f)
@@ -49,7 +41,7 @@ def remove_pii(txt_file):
         pattern = r'(?<=\b(' + label + r'))\d+'
         cleaned_text = re.sub(pattern, '', cleaned_text)
 
-        #pattern = r'(?<=\b(' + label + r'))\S*'
+        pattern = r'(?<=\b(' + label + r'))\S+'
         #cleaned_text = re.sub(pattern, '', cleaned_text)
     return cleaned_text
 
