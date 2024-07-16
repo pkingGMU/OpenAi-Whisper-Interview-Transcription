@@ -14,6 +14,7 @@ from pii import *
 
 
 
+
 def get_diarization(audio_file):
 
     #convert audio file from mp3 to wav
@@ -183,46 +184,34 @@ def main():
     #print(diarization_data)
 
 
-    # TODO: Run the diarization model on the wav file to get this data
-
-
-    # Test combination
-    #transcription_data = [
-    #{"text": "Hello, how are you?", "start_time": 0.0, "end_time": 1.5, 'index': 0},
-    #{"text": "I'm good, thank you.", "start_time": 2.0, "end_time": 4.0, 'index': 1},
-    #{"text": "Nice weather today.", "start_time": 5.0, "end_time": 6.5},
-    #]
-
-    #diarization_data = [
-    #{"speaker": "A", "start_time": 0.0, "end_time": 1.0},
-    #{"speaker": "B", "start_time": 2.0, "end_time": 3.5},
-    #{"speaker": "A", "start_time": 5.0, "end_time": 6.0},
-    #]
-
-    # Example usage
+    # Get allignment segments from combination
     aligned_segments = combine_diar_transcript2(diarization_data, transcription_data)
     #print(aligned_segments)
 
 
-    # If no output txt file exists in the patients folder (ie. LE_12) create a new text file in that folder for the output
-    # If it exists, append the new output to the file
+    # Write txt file with allignmed segments
     output_folder = file_path
-    output_filename = os.path.join(output_folder, patient_id + "_raw_transcription"+ ".txt")
+    output_filename_identifiable = os.path.join(output_folder, patient_id + "_raw_transcription"+ ".txt")
+    output_filename_DE_ID = os.path.join(output_folder, patient_id + "_raw_transcription_DE"+ ".txt")
     
-    with open(output_filename, "w") as f:
+    with open(output_filename_identifiable, "w") as f:
         for segment in aligned_segments:
             f.write(segment + "\n")
+
     
+    # DE_ID
+    # Read the file and replace the text with the DE_ID text and the string through pii.py()
+    with open(output_filename_identifiable, "r") as f:
+        raw_text = f.read()
     
+    # Remove PII with PII model
+    de_identified_text = remove_pii(raw_text)
+
+    # Write the DE_ID text to a new file
+    with open(output_filename_DE_ID, "w") as f:
+        f.write(de_identified_text)
 
 
-
-## TODO: Run diarization.py as a function
-
-
-## TODO: Run audio.py as a function
-
-## TODO: Match the output of both functions line by line
 
 # Load the diarization model
 
