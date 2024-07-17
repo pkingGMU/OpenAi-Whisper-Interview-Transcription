@@ -38,4 +38,3 @@ def remove_pii(txt_file):
 
     return text
 
-print(remove_pii(""))
