@@ -45,4 +45,3 @@ def remove_pii(text):
         #cleaned_text = re.sub(pattern, '', cleaned_text)
     return cleaned_text
 
-print(remove_pii(""))

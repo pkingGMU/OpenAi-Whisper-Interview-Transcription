@@ -133,9 +133,9 @@ def main():
 
     # Get the path of the file by searching a specific directory
     ## TODO: Change root folder to cyberduck
-    root = os.path.dirname(os.path.abspath(__file__))
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+    
     for folder in os.listdir(root):
         print(folder)
 
@@ -172,18 +172,18 @@ def main():
     #transcription_data = transcribe_audio(wav_file_path)
 
     ### DO NOT DELETE THIS IS WHAT WILL ACTUALLY RUN THE TRANSCRIPTION
-    ########transcription_data = transcribe_audio(wav_file_path)
-    with open("transcription_data.pkl","rb") as f:
-        transcription_data = pk.load(f)
+    transcription_data = transcribe_audio(wav_file_path)
+    #with open("transcription_data.pkl","rb") as f:
+    #    transcription_data = pk.load(f)
 
     #print (transcription_data)
 
     ## Diarization
 
     ### DO NOT DELETE THIS IS WHAT WILL ACTUALLY RUN THE DIARIZATION
-    #######diarization_data = diarization_task(wav_file_path)
-    with open("diarization_data.pkl","rb") as f:
-        diarization_data = pk.load(f)
+    diarization_data = diarization_task(wav_file_path)
+    #with open("diarization_data.pkl","rb") as f:
+    #    diarization_data = pk.load(f)
     #print(diarization_data)
 
 
