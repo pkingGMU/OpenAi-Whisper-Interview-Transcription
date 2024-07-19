@@ -1,15 +1,13 @@
 # Local Imports
 import whisper as wh
-import tkinter as tk
-from tkinter import filedialog
-from tkinter.filedialog import askopenfilename
+
 
 def transcribe_audio(audio):
     # Allow user to select audio file from directory with file dialog
     
 
     # Load the model
-    audio_model = wh.load_model('tiny')
+    audio_model = wh.load_model('small')
 
 
     # Load the audio file

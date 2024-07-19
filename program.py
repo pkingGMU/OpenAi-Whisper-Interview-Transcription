@@ -91,8 +91,6 @@ def combine_diar_transcript(diarization_data, transcription_data):
 
         # Append speaker and matched text to aligned output
         aligned_text.append(f"Speaker {speaker}: {matched_text.strip()}")
-        
-        print (transcription_data)
 
     return aligned_text
 
@@ -135,9 +133,9 @@ def main():
     ## TODO: Change root folder to cyberduck
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    
+
     for folder in os.listdir(root):
-        print(folder)
+        #print(folder)
 
         if folder == patient_id:
             file_path = os.path.join(root, folder)
@@ -146,7 +144,7 @@ def main():
             file_path = 'Didnt find the folder'
 
     for file in os.listdir(file_path):
-        print(file)
+        #print(file)
 
         if file.endswith('.mp3'):
             audio_file = os.path.join(file_path, file)
@@ -154,25 +152,31 @@ def main():
         else:
             audio_file = 'Didnt find the file'
 
-    print (audio_file)
+    #print(audio_file)
 
     ## Convert mp3 file to wav using audio_file path if there is no wav file created
     temp_file_name = file.split('.')[0]
     wav_file_path = os.path.join(file_path, temp_file_name+'.wav')
 
-    if not any(file.endswith('.wav') for file in os.listdir(file_path)):    
+    output_folder = root + fr"/output/{patient_id}"
+    os.mkdir(output_folder)
+
+
+    if not any(file.endswith('.wav') for file in os.listdir(output_folder)):
         sound = AudioSegment.from_mp3(audio_file)
-        sound.export(wav_file_path, format="wav")
+        sound.export(fr"{output_folder}/{temp_file_name}", format="wav")
 
 
-    print(wav_file_path)
+    #print(wav_file_path)
     
     ## Transcription
 
     #transcription_data = transcribe_audio(wav_file_path)
 
     ### DO NOT DELETE THIS IS WHAT WILL ACTUALLY RUN THE TRANSCRIPTION
+    print("transcription started \n")
     transcription_data = transcribe_audio(wav_file_path)
+    print("transcription done \n")
     #with open("transcription_data.pkl","rb") as f:
     #    transcription_data = pk.load(f)
 
@@ -181,19 +185,24 @@ def main():
     ## Diarization
 
     ### DO NOT DELETE THIS IS WHAT WILL ACTUALLY RUN THE DIARIZATION
+    print("diarization started \n")
     diarization_data = diarization_task(wav_file_path)
+    print("diarization done \n")
     #with open("diarization_data.pkl","rb") as f:
     #    diarization_data = pk.load(f)
     #print(diarization_data)
 
 
     # Get allignment segments from combination
+    print("diarization and transcription alignment started \n")
     deidentified_aligned_text, aligned_segments = combine_diar_transcript2(diarization_data, transcription_data)
+    print("diarization and transcription alignment done \n")
     #print(aligned_segments)
 
 
     # Write txt file with allignmed segments
-    output_folder = file_path
+
+
     output_filename_identifiable = os.path.join(output_folder, patient_id + "_raw_transcription"+ ".txt")
     output_filename_DE_ID = os.path.join(output_folder, patient_id + "_raw_transcription_DE"+ ".txt")
     
