@@ -47,12 +47,18 @@ def main ():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # Path for subject raw
+    original_path = os.path.join(root, 'output', subject, 'LE_12_raw_transcription_DE.txt')
 
-    original = os.path.join(root, subject)
+    with open (original_path, 'r') as f:
+        original = f.read()
+    print (original_path)
 
     # Path for subject processed
+    processed_path = os.path.join(root, 'output', subject, 'LE_12_processed_transcription_DE.txt')
 
-    processed = os.path.join(root, 'output', subject)
+    with open (processed_path, 'r') as f:
+        processed = (f.read())
+    print (processed_path)
 
 
     calc_word_error_rate(original, processed)

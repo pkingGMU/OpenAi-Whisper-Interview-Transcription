@@ -2,3 +2,5 @@
 audio.rttm
 pii_model.pkl
 .DS_Store
+word_error_rate.sh
+program.sh
