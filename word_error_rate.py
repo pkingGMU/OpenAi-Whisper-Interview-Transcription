@@ -2,6 +2,7 @@
 
 # Import
 import jiwer
+import os
 
 
 def calc_word_error_rate(original, processed):
@@ -36,11 +37,25 @@ def calc_word_error_rate(original, processed):
             )
     print(f"Word Error Rate (WER) :", wer)
 
-# Test
-# Original transcription
-original = "hello world how are you"
 
-# Processed transcription
-processed = "hello worl how are you doing today"
+def main ():
+   
+    # Ask user for subject this wish to compare error rate
+    subject = input("Enter the subject ID: ")
 
-calc_word_error_rate(original, processed)
+    # Path for root
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    # Path for subject raw
+
+    original = os.path.join(root, subject)
+
+    # Path for subject processed
+
+    processed = os.path.join(root, 'output', subject)
+
+
+    calc_word_error_rate(original, processed)
+
+if __name__ == "__main__":
+    main()
